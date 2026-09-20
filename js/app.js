@@ -5,7 +5,7 @@ let frOut, cpOut, tOut;
 
 // Constantes Físicas extraídas del modelo original de LearnChemE
 const gamma = 9.807; // Peso específico del agua en kN/m^3
-const L = 2.0;       // Longitud total de la compuerta en metros
+const L = 4.0;       // Longitud total de la compuerta en metros
 
 function setup() {
     let canvasContainer = select('#canvas-container');

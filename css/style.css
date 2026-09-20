@@ -7,11 +7,7 @@
     --border-radius: 8px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,21 +23,10 @@ header {
     text-align: center;
 }
 
-header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-}
+header h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+.attribution { font-size: 0.9rem; opacity: 0.8; }
+.attribution a { color: #34dbcc; text-decoration: none; }
 
-.attribution {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-.attribution a {
-    color: #34dbcc;
-}
-
-/* Layout Principal */
 .container {
     display: grid;
     grid-template-columns: 350px 1fr;
@@ -51,7 +36,6 @@ header h1 {
     margin: 0 auto;
 }
 
-/* Panel de Controles */
 .controls-panel {
     background: var(--panel-bg);
     padding: 20px;
@@ -66,37 +50,25 @@ header h1 {
     padding-bottom: 5px;
 }
 
-.control-group {
-    margin-bottom: 20px;
-}
+.control-group { margin-bottom: 20px; }
+.control-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
 
-.control-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-/* Sliders optimizados para táctil */
 input[type=range] {
     width: 100%;
-    height: 30px; /* Alto suficiente para el dedo */
+    height: 35px; /* Táctil amigable */
     cursor: pointer;
 }
 
 .results-panel {
-    margin-top: 30px;
+    margin-top: 25px;
     background: #eef2f5;
     padding: 15px;
     border-radius: var(--border-radius);
     border-left: 5px solid var(--secondary-color);
 }
 
-.result-item {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-}
+.result-item { font-size: 1.05rem; margin-bottom: 10px; }
 
-/* Contenedor del Canvas */
 .canvas-container {
     background: var(--panel-bg);
     border-radius: var(--border-radius);
@@ -105,20 +77,16 @@ input[type=range] {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    min-height: 400px; /* Asegura un tamaño mínimo en móviles */
+    min-height: 500px;
 }
 
-/* Sección Educativa */
 .educational-section {
     max-width: 1400px;
     margin: 20px auto;
     padding: 20px;
 }
 
-.educational-section h2 {
-    margin-bottom: 20px;
-    color: var(--primary-color);
-}
+.educational-section h2 { margin-bottom: 20px; color: var(--primary-color); }
 
 .activity-card {
     background: var(--panel-bg);
@@ -129,18 +97,9 @@ input[type=range] {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.activity-card h3 {
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-}
+.activity-card h3 { margin-bottom: 10px; font-size: 1.1rem; }
 
-/* Responsive Design */
 @media (max-width: 900px) {
-    .container {
-        grid-template-columns: 1fr; /* Apila controles arriba y simulador abajo */
-    }
-    
-    .canvas-container {
-        min-height: 50vw;
-    }
+    .container { grid-template-columns: 1fr; }
+    .canvas-container { min-height: 60vw; }
 }

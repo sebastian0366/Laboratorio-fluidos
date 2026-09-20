@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fuerzas en una Compuerta Parcialmente Sumergida</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Fuerzas en una Compuerta Parcialmente Sumergida</h1>
+        <p class="attribution">Basado en la simulación original de <a href="https://learncheme.com/" target="_blank">LearnChemE</a>.</p>
+    </header>
+
+    <main class="container">
+        <section class="controls-panel">
+            <h2>Parámetros</h2>
+            
+            <div class="control-group">
+                <label for="h-slider">Profundidad del agua, h: <span id="h-val">1.50</span> m</label>
+                <input type="range" id="h-slider" min="0.00" max="3.00" step="0.01" value="1.50">
+            </div>
+
+            <div class="control-group">
+                <label for="b-slider">Ancho de la compuerta, b: <span id="b-val">1.00</span> m</label>
+                <input type="range" id="b-slider" min="0.10" max="3.00" step="0.01" value="1.00">
+            </div>
+
+            <div class="control-group">
+                <label for="theta-slider">Ángulo de la compuerta, &theta;: <span id="theta-val">60</span>&deg;</label>
+                <input type="range" id="theta-slider" min="30" max="90" step="1" value="60">
+            </div>
+
+            <div class="control-group">
+                <label for="mass-slider">Masa de la compuerta: <span id="mass-val">500</span> kg</label>
+                <input type="range" id="mass-slider" min="100" max="2000" step="10" value="500">
+            </div>
+
+            <div class="results-panel">
+                <h2>Resultados en Tiempo Real</h2>
+                <div class="result-item">Fuerza Hidrostática (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
+                <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
+                <div class="result-item">Tensión del Cable (T): <strong id="t-out">0.00</strong> kN</div>
+            </div>
+        </section>
+
+        <section class="canvas-container" id="canvas-container">
+            </section>
+    </main>
+
+    <section class="educational-section">
+        <h2>Actividad para estudiantes</h2>
+        <div class="activity-card">
+            <h3>Actividad 1: Efecto de la profundidad</h3>
+            <p>Mantenga constantes el ancho de la compuerta (b = 1.00 m) y el ángulo (&theta; = 60&deg;). Varíe la profundidad del agua (h) entre 0.50 m y 3.00 m y observe cómo incrementa la fuerza hidrostática. ¿Es un incremento lineal o exponencial?</p>
+        </div>
+        <div class="activity-card">
+            <h3>Actividad 2: El papel del ancho de la compuerta</h3>
+            <p>Mantenga constante la profundidad (h = 1.50 m) y el ángulo. Varíe el ancho b de la compuerta desde 1.00 m hasta 2.00 m. Observe cómo cambia la fuerza resultante. ¿Qué relación matemática encuentra entre el ancho y la fuerza resultante?</p>
+        </div>
+        <div class="activity-card">
+            <h3>Actividad 3: Análisis comparativo</h3>
+            <p>Compare dos configuraciones con la misma profundidad pero diferente ancho de compuerta y explique físicamente la diferencia. Observe la representación en 3D (perspectiva) en el simulador para visualizar el volumen de agua soportado.</p>
+        </div>
+    </section>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

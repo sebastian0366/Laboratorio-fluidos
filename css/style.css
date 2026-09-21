@@ -21,9 +21,31 @@ header {
     color: white;
     padding: 1.5rem 1rem;
     text-align: center;
+    position: relative; /* Clave para posicionar el logo */
 }
 
-header h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+header h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+
+.subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #aed6f1;
+    margin-bottom: 0.8rem;
+}
+
+/* Estilo para el logo de la UTP */
+.logo-utp {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%); /* Centra el logo verticalmente */
+    height: 75px;
+    background-color: white; /* Da un fondo blanco limpio al logo */
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
 .attribution { font-size: 0.9rem; opacity: 0.8; }
 .attribution a { color: #34dbcc; text-decoration: none; }
 
@@ -50,12 +72,12 @@ header h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
     padding-bottom: 5px;
 }
 
-.control-group { margin-bottom: 20px; }
+.control-group { margin-bottom: 15px; }
 .control-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
 
 input[type=range] {
     width: 100%;
-    height: 35px; /* Táctil amigable */
+    height: 35px;
     cursor: pointer;
 }
 
@@ -99,7 +121,19 @@ input[type=range] {
 
 .activity-card h3 { margin-bottom: 10px; font-size: 1.1rem; }
 
+/* Responsive: cómo se comporta en celulares */
 @media (max-width: 900px) {
     .container { grid-template-columns: 1fr; }
     .canvas-container { min-height: 60vw; }
+}
+
+@media (max-width: 650px) {
+    /* El logo baja al centro en pantallas pequeñas */
+    .logo-utp {
+        position: static;
+        transform: none;
+        display: block;
+        margin: 0 auto 15px auto;
+        height: 60px;
+    }
 }

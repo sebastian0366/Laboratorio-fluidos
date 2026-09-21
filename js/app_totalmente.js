@@ -77,12 +77,12 @@ function draw() {
     // Momento del peso (Ayuda a cerrar la compuerta)
     let M_weight = W * (L / 2) * cos(theta_rad);
     
-    // Fuerza aplicada para mantenerla cerrada (Asumiendo que el agua trata de abrirla)
+    // Fuerza aplicada para mantenerla cerrada
     let F_app = (M_water - M_weight) / L;
 
     frOut.html(F_R.toFixed(2));
     cpOut.html(s_cp.toFixed(2));
-    faOut.html(F_app.toFixed(2)); // Puede ser negativa si el peso es excesivo
+    faOut.html(F_app.toFixed(2));
 
     // 3. Representación Gráfica
     let scaleFactor = min(width, height) / 7.5;
@@ -105,8 +105,8 @@ function draw() {
     // Muro Izquierdo, Piso y Muros derechos
     line(leftWallX, topWallY, leftWallX, floorY); 
     line(leftWallX, floorY, width * 0.95, floorY); 
-    line(originX, topWallY, originX, originY); // Muro sobre bisagra
-    line(endX, endY, endX, floorY); // Muro bajo compuerta
+    line(originX, topWallY, originX, originY); 
+    line(endX, endY, endX, floorY); 
 
     stroke(130);
     strokeWeight(2);
@@ -164,13 +164,13 @@ function draw() {
 
     // --- VECTORES DE FUERZA Y ETIQUETAS ---
 
-    // 1. Fuerza Aplicada (FA)
+    // 1. Fuerza Aplicada (FA) - AHORA EN SENTIDO INVERSO
     if (abs(F_app) > 0.1) {
         let fa_scale = map(abs(F_app), 0, 100, 40, 100);
         fa_scale = constrain(fa_scale, 40, 100);
         
-        // Si F_app es positiva, jala para cerrar (hacia abajo-izquierda). Si negativa, empuja arriba-derecha
-        let faAngle = F_app >= 0 ? theta_rad + PI/2 : theta_rad - PI/2; 
+        // Se cambiaron los signos: Ahora inicia desde el exterior y apunta hacia adentro
+        let faAngle = F_app >= 0 ? theta_rad - PI/2 : theta_rad + PI/2; 
         
         let faStartX = endX + fa_scale * cos(faAngle);
         let faStartY = endY + fa_scale * sin(faAngle);
@@ -181,13 +181,14 @@ function draw() {
         
         push();
         translate(endX, endY);
-        rotate(faAngle + PI); 
+        rotate(faAngle + PI); // La flecha ahora apunta en sentido de empuje
         fill(142, 68, 173);
         noStroke();
         triangle(0, 0, -12, -6, -12, 6);
         pop();
 
-        drawLabel("FA", faStartX + 20, faStartY, color(142, 68, 173));
+        // Ajusté un poco la posición de la etiqueta para que no se superponga
+        drawLabel("FA", faStartX + 25, faStartY - 15, color(142, 68, 173));
     }
 
     // 2. Fuerza Resultante (FR)
@@ -198,7 +199,7 @@ function draw() {
         let force_scale = map(F_R, 0, 300, 40, 120);
         force_scale = constrain(force_scale, 40, 120);
 
-        let normAngle = theta_rad - PI/2; // El agua empuja perpendicularmente hacia Arriba-Derecha
+        let normAngle = theta_rad - PI/2; 
         let fx = cpX - force_scale * cos(normAngle);
         let fy = cpY - force_scale * sin(normAngle);
         

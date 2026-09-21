@@ -9,7 +9,11 @@
 </head>
 <body>
     <header>
+        <!-- Logo UTP en la esquina superior derecha -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Universidad_Tecnol%C3%B3gica_de_Pereira_-_Logo.svg/512px-Universidad_Tecnol%C3%B3gica_de_Pereira_-_Logo.svg.png" alt="Logo UTP" class="logo-utp">
+        
         <h1>Fuerzas en una Compuerta Parcialmente Sumergida</h1>
+        <p class="subtitle">Facultad de Mecánica Aplicada - UTP</p>
         <p class="attribution">Basado en el modelo físico original de <a href="https://learncheme.com/" target="_blank">LearnChemE</a>.</p>
     </header>
 
@@ -30,12 +34,18 @@
 
             <div class="control-group">
                 <label for="theta-slider">Ángulo de la compuerta, &theta;: <span id="theta-val">45</span>&deg;</label>
-                <input type="range" id="theta-slider" min="30" max="60" step="1" value="45">
+                <input type="range" id="theta-slider" min="30" max="90" step="1" value="45">
             </div>
 
             <div class="control-group">
                 <label for="w-slider">Peso de la compuerta, W: <span id="w-val">10.0</span> kN</label>
                 <input type="range" id="w-slider" min="1.0" max="20.0" step="0.1" value="10.0">
+            </div>
+
+            <!-- Nuevo Control: Peso Específico -->
+            <div class="control-group">
+                <label for="gamma-slider">Peso específico del fluido, &gamma;: <span id="gamma-val">9.81</span> kN/m&sup3;</label>
+                <input type="range" id="gamma-slider" min="9.30" max="9.85" step="0.01" value="9.81">
             </div>
 
             <div class="results-panel">
@@ -59,8 +69,8 @@
             <p>Mantenga el ancho (b = 1.00 m), el ángulo (&theta; = 45&deg;) y el peso (W = 10.0 kN). Varíe la profundidad (h) desde 0.00 m hasta 3.00 m. Note qué sucede con la tensión cuando el agua supera la altura de la compuerta.</p>
         </div>
         <div class="activity-card">
-            <h3>Actividad 2: El papel del ancho de la compuerta</h3>
-            <p>Mantenga la profundidad (h = 1.50 m) y el ángulo. Varíe el ancho b de la compuerta. Observe la representación 3D y compruebe si la Fuerza Hidrostática crece de manera proporcional al área mojada.</p>
+            <h3>Actividad 2: Diferentes Fluidos</h3>
+            <p>Compare la fuerza resultante obtenida utilizando agua dulce frente a otros tipos de fluidos modificando el peso específico (&gamma;). ¿Cómo afecta la densidad del fluido a la ubicación del Centro de Presión?</p>
         </div>
     </section>
 

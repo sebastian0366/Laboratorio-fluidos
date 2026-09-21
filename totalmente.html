@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Compuerta Totalmente Sumergida</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+</head>
+<body>
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <div style="background-color: #34495e; padding: 12px; text-align: center;">
+        <a href="index.html" style="color: white; margin-right: 20px; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid white;">🕹️ Caso 1: Parcialmente Sumergida</a>
+        <a href="totalmente.html" style="color: #f1c40f; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid #f1c40f;">🕹️ Caso 2: Totalmente Sumergida</a>
+    </div>
 
+    <header>
+        <img src="logo.png" alt="Logo UTP" class="logo-utp">
+        <h1>Fuerzas en una Compuerta Totalmente Sumergida</h1>
+        <p class="subtitle">Facultad de Mecánica Aplicada - UTP</p>
+    </header>
+
+    <main class="container">
+        <section class="controls-panel">
+            <h2>Parámetros del Sistema</h2>
+            
+            <div class="control-group">
+                <label for="d-slider">Profundidad hasta bisagra, D: <span id="d-val">2.00</span> m</label>
+                <input type="range" id="d-slider" min="0.00" max="3.00" step="0.01" value="2.00">
+            </div>
+
+            <div class="control-group">
+                <label for="b-slider">Ancho de la compuerta, b: <span id="b-val">1.00</span> m</label>
+                <input type="range" id="b-slider" min="0.50" max="3.00" step="0.01" value="1.00">
+            </div>
+
+            <div class="control-group">
+                <label for="theta-slider">Ángulo de la compuerta, &theta;: <span id="theta-val">45</span>&deg;</label>
+                <input type="range" id="theta-slider" min="0" max="90" step="1" value="45">
+            </div>
+
+            <div class="control-group">
+                <label for="w-slider">Peso de la compuerta, W: <span id="w-val">5.0</span> kN</label>
+                <input type="range" id="w-slider" min="0.0" max="25.0" step="0.1" value="5.0">
+            </div>
+
+            <div class="control-group">
+                <label for="gamma-slider">Peso específico del fluido, &gamma;: <span id="gamma-val">9.81</span> kN/m&sup3;</label>
+                <input type="range" id="gamma-slider" min="9.30" max="9.85" step="0.01" value="9.81">
+            </div>
+
+            <div class="results-panel">
+                <h2>Resultados en Tiempo Real</h2>
+                <div class="result-item">Fuerza Hidrostática (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
+                <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
+                <div class="result-item">Fuerza Aplicada (FA): <strong id="fa-out">0.00</strong> kN</div>
+            </div>
+        </section>
+
+        <section class="canvas-container" id="canvas-container"></section>
+    </main>
+
+    <!-- OJO: Aquí llamamos al NUEVO archivo JS -->
+    <script src="js/app_totalmente.js"></script>
+</body>
+</html>

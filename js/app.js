@@ -1,23 +1,23 @@
 // Variables del DOM
-let dSlider, bSlider, thetaSlider, wSlider, gammaSlider;
-let dVal, bVal, thetaVal, wVal, gammaVal;
-let frOut, cpOut, faOut;
+let hSlider, bSlider, thetaSlider, wSlider, gammaSlider;
+let hVal, bVal, thetaVal, wVal, gammaVal;
+let frOut, cpOut, tOut;
 
-// Constantes Físicas del modelo
-const L = 2.5; // Longitud fija de la compuerta (según el modelo de LearnChemE)
+// Constantes Físicas
+const L = 2.0;       
 
 function setup() {
     let canvasContainer = select('#canvas-container');
     let canvas = createCanvas(canvasContainer.width, canvasContainer.height);
     canvas.parent('canvas-container');
 
-    dSlider = select('#d-slider');
+    hSlider = select('#h-slider');
     bSlider = select('#b-slider');
     thetaSlider = select('#theta-slider');
     wSlider = select('#w-slider');
     gammaSlider = select('#gamma-slider'); 
 
-    dVal = select('#d-val');
+    hVal = select('#h-val');
     bVal = select('#b-val');
     thetaVal = select('#theta-val');
     wVal = select('#w-val');
@@ -25,9 +25,10 @@ function setup() {
 
     frOut = select('#fr-out');
     cpOut = select('#cp-out');
-    faOut = select('#fa-out');
+    tOut = select('#t-out');
 }
 
+// Función auxiliar para dibujar etiquetas con fondo
 function drawLabel(txt, x, y, col) {
     push();
     fill(255, 255, 255, 220); 
@@ -47,107 +48,102 @@ function draw() {
     background(248, 249, 250);
 
     // 1. Leer parámetros
-    let D = parseFloat(dSlider.value());
+    let h = parseFloat(hSlider.value());
     let b = parseFloat(bSlider.value());
     let theta_deg = parseFloat(thetaSlider.value());
     let W = parseFloat(wSlider.value()); 
     let gamma = parseFloat(gammaSlider.value()); 
 
-    dVal.html(D.toFixed(2));
+    hVal.html(h.toFixed(2));
     bVal.html(b.toFixed(2));
     thetaVal.html(theta_deg);
     wVal.html(W.toFixed(1));
     gammaVal.html(gamma.toFixed(2));
 
-    // 2. Cálculos Físicos (Compuerta Totalmente Sumergida - Bisagra Superior)
+    // 2. Cálculos Físicos
     let theta_rad = radians(theta_deg);
+    let s_max = min(L, h / sin(theta_rad));
     
-    // Profundidad desde la superficie hasta el centroide
-    let h_c = D + (L / 2) * sin(theta_rad);
-    let F_R = gamma * h_c * (L * b);
-    
-    // Momento del agua sobre la bisagra superior
-    let M_water = gamma * b * (D * pow(L, 2) / 2 + sin(theta_rad) * pow(L, 3) / 3);
-    
-    let s_cp = 0;
-    if (F_R > 0) {
-        s_cp = M_water / F_R;
+    let F_R = 0;
+    let s_cp = 0; 
+    let M_water = 0; 
+
+    if (h > 0) {
+        F_R = gamma * b * (h * s_max - 0.5 * s_max * s_max * sin(theta_rad));
+        M_water = gamma * b * (h * 0.5 * s_max * s_max - (1/3) * pow(s_max, 3) * sin(theta_rad));
+        
+        if (F_R > 0) {
+            s_cp = M_water / F_R;
+        }
     }
 
-    // Momento del peso (Ayuda a cerrar la compuerta)
     let M_weight = W * (L / 2) * cos(theta_rad);
-    
-    // Fuerza aplicada para mantenerla cerrada (Asumiendo que el agua trata de abrirla)
-    let F_app = (M_water - M_weight) / L;
+    let Tension = (M_water + M_weight) / (L * sin(theta_rad));
 
     frOut.html(F_R.toFixed(2));
-    cpOut.html(s_cp.toFixed(2));
-    faOut.html(F_app.toFixed(2)); // Puede ser negativa si el peso es excesivo
+    cpOut.html(F_R > 0 ? s_cp.toFixed(2) : "0.00");
+    tOut.html(Tension.toFixed(2));
 
     // 3. Representación Gráfica
-    let scaleFactor = min(width, height) / 7.5;
-    
-    // Coordenadas del tanque escalonado
-    let originX = width * 0.45;  // Bisagra superior
-    let originY = height * 0.45; 
-    let topWallY = originY - 300;
-    let leftWallX = width * 0.15;
-    let floorY = height * 0.85;
-
-    let endX = originX + L * cos(theta_rad) * scaleFactor;
-    let endY = originY + L * sin(theta_rad) * scaleFactor;
+    let scaleFactor = min(width, height) / 4.5;
+    let originX = width * 0.45;  
+    let originY = height * 0.85; 
+    let tankLeftX = width * 0.15; 
 
     push();
     
-    // --- ACHURADO DEL TANQUE ---
-    stroke(80); 
+    // --- ACHURADO (Fondo y Pared Izquierda) ---
+    // Líneas principales del tanque (Muros)
+    stroke(80); // Color oscuro para los muros
     strokeWeight(4);
-    // Muro Izquierdo, Piso y Muros derechos
-    line(leftWallX, topWallY, leftWallX, floorY); 
-    line(leftWallX, floorY, width * 0.95, floorY); 
-    line(originX, topWallY, originX, originY); // Muro sobre bisagra
-    line(endX, endY, endX, floorY); // Muro bajo compuerta
+    line(tankLeftX - 30, originY, width * 0.95, originY); // Suelo (se extiende a la izquierda)
+    line(tankLeftX, originY, tankLeftX, originY - 380); // Pared izquierda
 
-    stroke(130);
+    // Líneas diagonales (Achurado que indica que es sólido)
+    stroke(120); // Gris intermedio para las diagonales
     strokeWeight(2);
-    // Achurado muro izquierdo
-    for (let y = topWallY; y < floorY; y += 20) {
-        line(leftWallX, y, leftWallX - 20, y + 20);
+    // Diagonales del suelo (Hacia abajo y la izquierda)
+    for (let x = tankLeftX - 10; x < width * 0.95; x += 20) {
+        line(x, originY, x - 20, originY + 20);
     }
-    // Achurado piso
-    for (let x = leftWallX - 20; x < width * 0.95; x += 20) {
-        line(x, floorY, x - 20, floorY + 20);
+    // Diagonales de la pared izquierda (Hacia abajo y la izquierda)
+    for (let y = originY - 20; y > originY - 380; y -= 20) {
+        line(tankLeftX, y, tankLeftX - 20, y + 20);
     }
-    // Achurado muro sobre bisagra
-    for (let y = topWallY; y < originY - 10; y += 20) {
-        line(originX, y, originX + 20, y + 20);
-    }
-    // Achurado muro bajo compuerta
-    for (let y = endY; y < floorY - 10; y += 20) {
-        line(endX, y, endX + 20, y + 20);
+    // ------------------------------------------
+
+    // Agua
+    if (h > 0) {
+        fill(52, 152, 219, 140);
+        noStroke();
+        beginShape();
+        vertex(originX, originY); 
+        vertex(tankLeftX, originY); 
+        
+        let water_h_px = h * scaleFactor;
+        vertex(tankLeftX, originY - water_h_px); 
+        
+        if (h <= L * sin(theta_rad)) {
+            let hitX = originX + s_max * cos(theta_rad) * scaleFactor;
+            vertex(hitX, originY - water_h_px); 
+        } else {
+            let gateTopX = originX + L * cos(theta_rad) * scaleFactor;
+            let gateTopY = originY - L * sin(theta_rad) * scaleFactor;
+            vertex(gateTopX, originY - water_h_px); 
+            vertex(gateTopX, gateTopY);
+        }
+        endShape(CLOSE);
+        
+        stroke(41, 128, 185);
+        strokeWeight(2);
+        line(tankLeftX, originY - h * scaleFactor, originX + min(s_max * cos(theta_rad), L * cos(theta_rad)) * scaleFactor, originY - h * scaleFactor);
     }
 
-    // --- DIBUJO DEL AGUA ---
-    let waterY = originY - D * scaleFactor;
-    fill(52, 152, 219, 140);
-    noStroke();
-    beginShape();
-    vertex(leftWallX, waterY);
-    vertex(originX, waterY);
-    vertex(originX, originY);
-    vertex(endX, endY);
-    vertex(endX, floorY);
-    vertex(leftWallX, floorY);
-    endShape(CLOSE);
-    
-    // Superficie del agua
-    stroke(41, 128, 185);
-    strokeWeight(2);
-    line(leftWallX, waterY, originX, waterY);
+    let endX = originX + L * cos(theta_rad) * scaleFactor;
+    let endY = originY - L * sin(theta_rad) * scaleFactor;
 
-    // --- COMPUERTA Y BISAGRA ---
-    let b_offset_x = -b * 8; 
-    let b_offset_y = -b * 12;
+    let b_offset_x = b * 15; 
+    let b_offset_y = -b * 8;
     
     fill(180);
     stroke(100);
@@ -160,45 +156,24 @@ function draw() {
 
     fill(231, 76, 60);
     noStroke();
-    circle(originX, originY, 14); // Bisagra arriba
+    circle(originX, originY, 14);
 
-    // --- VECTORES DE FUERZA Y ETIQUETAS ---
-
-    // 1. Fuerza Aplicada (FA)
-    if (abs(F_app) > 0.1) {
-        let fa_scale = map(abs(F_app), 0, 100, 40, 100);
-        fa_scale = constrain(fa_scale, 40, 100);
-        
-        // Si F_app es positiva, jala para cerrar (hacia abajo-izquierda). Si negativa, empuja arriba-derecha
-        let faAngle = F_app >= 0 ? theta_rad + PI/2 : theta_rad - PI/2; 
-        
-        let faStartX = endX + fa_scale * cos(faAngle);
-        let faStartY = endY + fa_scale * sin(faAngle);
-
-        stroke(142, 68, 173);
-        strokeWeight(3);
-        line(faStartX, faStartY, endX, endY);
-        
-        push();
-        translate(endX, endY);
-        rotate(faAngle + PI); 
-        fill(142, 68, 173);
-        noStroke();
-        triangle(0, 0, -12, -6, -12, 6);
-        pop();
-
-        drawLabel("FA", faStartX + 20, faStartY, color(142, 68, 173));
-    }
+    // --- VECTORES Y SUS ETIQUETAS ---
+    // 1. Tensión (T)
+    stroke(127, 140, 141);
+    strokeWeight(3);
+    line(endX, endY, endX - 100, endY);
+    drawLabel("T", endX - 50, endY - 20, color(50, 50, 50)); 
 
     // 2. Fuerza Resultante (FR)
     if (F_R > 0) {
         let cpX = originX + s_cp * cos(theta_rad) * scaleFactor;
-        let cpY = originY + s_cp * sin(theta_rad) * scaleFactor;
+        let cpY = originY - s_cp * sin(theta_rad) * scaleFactor;
 
-        let force_scale = map(F_R, 0, 300, 40, 120);
+        let force_scale = map(F_R, 0, 150, 40, 120);
         force_scale = constrain(force_scale, 40, 120);
 
-        let normAngle = theta_rad - PI/2; // El agua empuja perpendicularmente hacia Arriba-Derecha
+        let normAngle = -theta_rad + PI/2; 
         let fx = cpX - force_scale * cos(normAngle);
         let fy = cpY - force_scale * sin(normAngle);
         
@@ -217,24 +192,22 @@ function draw() {
         drawLabel("FR", fx - 25, fy - 20, color(231, 76, 60)); 
     }
 
-    // 3. Peso de la Compuerta (W)
+    // 3. Vector de Peso (W)
     let cmX = originX + (L/2) * cos(theta_rad) * scaleFactor;
-    let cmY = originY + (L/2) * sin(theta_rad) * scaleFactor;
+    let cmY = originY - (L/2) * sin(theta_rad) * scaleFactor;
     
-    if (W > 0) {
-        stroke(39, 174, 96);
-        strokeWeight(3);
-        line(cmX, cmY, cmX, cmY + 60);
-        push();
-        translate(cmX, cmY + 60);
-        rotate(PI/2); 
-        fill(39, 174, 96);
-        noStroke();
-        triangle(0, 0, -10, -5, -10, 5);
-        pop();
+    stroke(39, 174, 96);
+    strokeWeight(3);
+    line(cmX, cmY, cmX, cmY + 50);
+    push();
+    translate(cmX, cmY + 50);
+    rotate(PI/2); 
+    fill(39, 174, 96);
+    noStroke();
+    triangle(0, 0, -10, -5, -10, 5);
+    pop();
 
-        drawLabel("W", cmX + 25, cmY + 35, color(39, 174, 96)); 
-    }
+    drawLabel("W", cmX + 25, cmY + 25, color(39, 174, 96)); 
 
     pop();
 }

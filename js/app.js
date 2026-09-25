@@ -1,9 +1,8 @@
 // Variables del DOM
-let hSlider, bSlider, thetaSlider, wSlider, gammaSlider;
-let hVal, bVal, thetaVal, wVal, gammaVal;
+let hSlider, bSlider, thetaSlider, wSlider, drSlider;
+let hVal, bVal, thetaVal, wVal, drVal;
 let frOut, cpOut, tOut;
-let dSlider, bSlider, thetaSlider, wSlider, drSlider; 
-let dVal, bVal, thetaVal, wVal, drVal;
+
 // Constantes Físicas
 const L = 3.5;       
 
@@ -16,20 +15,18 @@ function setup() {
     bSlider = select('#b-slider');
     thetaSlider = select('#theta-slider');
     wSlider = select('#w-slider');
-    gammaSlider = select('#gamma-slider'); 
+    // Usamos el método de vainilla JS para el DR como lo tenías
+    drSlider = document.getElementById('dr-slider');
 
     hVal = select('#h-val');
     bVal = select('#b-val');
     thetaVal = select('#theta-val');
     wVal = select('#w-val');
-    gammaVal = select('#gamma-val'); 
+    drVal = document.getElementById('dr-val');
 
     frOut = select('#fr-out');
     cpOut = select('#cp-out');
     tOut = select('#t-out');
-    drSlider = document.getElementById('dr-slider');
-    drVal = document.getElementById('dr-val');
-
 }
 
 // Función auxiliar para dibujar etiquetas con fondo
@@ -56,13 +53,17 @@ function draw() {
     let b = parseFloat(bSlider.value());
     let theta_deg = parseFloat(thetaSlider.value());
     let W = parseFloat(wSlider.value()); 
+    
+    // IMPORTANTE: Primero leemos el DR, luego calculamos el gamma
+    let DR = parseFloat(drSlider.value); 
     let gamma = DR * 9.81;
 
+    // Actualizar valores en la pantalla
     hVal.html(h.toFixed(2));
     bVal.html(b.toFixed(2));
     thetaVal.html(theta_deg);
     wVal.html(W.toFixed(1));
-    gammaVal.html(gamma.toFixed(2));
+    drVal.innerText = DR.toFixed(2);
 
     // 2. Cálculos Físicos
     let theta_rad = radians(theta_deg);
@@ -71,8 +72,6 @@ function draw() {
     let F_R = 0;
     let s_cp = 0; 
     let M_water = 0; 
-    let DR = parseFloat(drSlider.value); 
-    drVal.innerText = DR.toFixed(2);
 
     if (h > 0) {
         F_R = gamma * b * (h * s_max - 0.5 * s_max * s_max * sin(theta_rad));
@@ -99,26 +98,21 @@ function draw() {
     push();
     
     // --- ACHURADO (Fondo y Pared Izquierda) ---
-    // Líneas principales del tanque (Muros)
-    stroke(80); // Color oscuro para los muros
+    stroke(80); 
     strokeWeight(4);
-    line(tankLeftX - 30, originY, width * 0.95, originY); // Suelo (se extiende a la izquierda)
-    line(tankLeftX, originY, tankLeftX, originY - 380); // Pared izquierda
+    line(tankLeftX - 30, originY, width * 0.95, originY); 
+    line(tankLeftX, originY, tankLeftX, originY - 380); 
 
-    // Líneas diagonales (Achurado que indica que es sólido)
-    stroke(120); // Gris intermedio para las diagonales
+    stroke(120); 
     strokeWeight(2);
-    // Diagonales del suelo (Hacia abajo y la izquierda)
     for (let x = tankLeftX - 10; x < width * 0.95; x += 20) {
         line(x, originY, x - 20, originY + 20);
     }
-    // Diagonales de la pared izquierda (Hacia abajo y la izquierda)
     for (let y = originY - 20; y > originY - 380; y -= 20) {
         line(tankLeftX, y, tankLeftX - 20, y + 20);
     }
-    // ------------------------------------------
 
-    // Agua
+    // --- AGUA ---
     if (h > 0) {
         fill(52, 152, 219, 140);
         noStroke();
@@ -145,6 +139,7 @@ function draw() {
         line(tankLeftX, originY - h * scaleFactor, originX + min(s_max * cos(theta_rad), L * cos(theta_rad)) * scaleFactor, originY - h * scaleFactor);
     }
 
+    // --- COMPUERTA ---
     let endX = originX + L * cos(theta_rad) * scaleFactor;
     let endY = originY - L * sin(theta_rad) * scaleFactor;
 

@@ -2,7 +2,8 @@
 let hSlider, bSlider, thetaSlider, wSlider, gammaSlider;
 let hVal, bVal, thetaVal, wVal, gammaVal;
 let frOut, cpOut, tOut;
-
+let dSlider, bSlider, thetaSlider, wSlider, drSlider; 
+let dVal, bVal, thetaVal, wVal, drVal;
 // Constantes Físicas
 const L = 3.5;       
 
@@ -26,6 +27,9 @@ function setup() {
     frOut = select('#fr-out');
     cpOut = select('#cp-out');
     tOut = select('#t-out');
+    drSlider = document.getElementById('dr-slider');
+    drVal = document.getElementById('dr-val');
+
 }
 
 // Función auxiliar para dibujar etiquetas con fondo
@@ -52,7 +56,7 @@ function draw() {
     let b = parseFloat(bSlider.value());
     let theta_deg = parseFloat(thetaSlider.value());
     let W = parseFloat(wSlider.value()); 
-    let gamma = parseFloat(gammaSlider.value()); 
+    let gamma = DR * 9.81;
 
     hVal.html(h.toFixed(2));
     bVal.html(b.toFixed(2));
@@ -67,6 +71,8 @@ function draw() {
     let F_R = 0;
     let s_cp = 0; 
     let M_water = 0; 
+    let DR = parseFloat(drSlider.value); 
+    drVal.innerText = DR.toFixed(2);
 
     if (h > 0) {
         F_R = gamma * b * (h * s_max - 0.5 * s_max * s_max * sin(theta_rad));

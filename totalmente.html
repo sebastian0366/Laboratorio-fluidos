@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
-    <!-- MENÚ DE NAVEGACIÓN -->
     <div style="background-color: #34495e; padding: 12px; text-align: center;">
         <a href="index.html" style="color: white; margin-right: 20px; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid white;">🕹️ Caso 1: Parcialmente Sumergida</a>
         <a href="totalmente.html" style="color: #f1c40f; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid #f1c40f;">🕹️ Caso 2: Totalmente Sumergida</a>
@@ -18,17 +17,18 @@
         <img src="logo.png" alt="Logo UTP" class="logo-utp">
         <h1>Fuerzas en una Compuerta Totalmente Sumergida</h1>
         <p class="subtitle">Facultad de Mecánica Aplicada - UTP</p>
-         <p class="attribution">Basado en el modelo físico original de <a href="https://learncheme.com/" target="_blank">LearnChemE</a>.</p>
     </header>
 
     <main class="container">
         <section class="controls-panel">
             <h2>Parámetros del Sistema</h2>
+            
             <div class="control-group" style="background-color: #e8f4f8; padding: 10px; border-left: 4px solid #3498db; border-radius: 4px;">
                 <label style="margin-bottom: 0; color: #2c3e50;">Longitud de la compuerta, L: <strong>2.50</strong> m <em>(Constante)</em></label>
             </div>
-            <div class="control-group">
-                <label for="d-slider">Profundidad hasta bisagra, D: <span id="d-val">2.00</span> m</label>
+
+            <div class="control-group" style="margin-top: 15px;">
+                <label for="d-slider">Profund. hasta bisagra, D: <span id="d-val">2.00</span> m</label>
                 <input type="range" id="d-slider" min="0.00" max="3.00" step="0.01" value="2.00">
             </div>
 
@@ -48,12 +48,13 @@
             </div>
 
             <div class="control-group">
-                <label for="gamma-slider">Peso específico del fluido, &gamma;: <span id="gamma-val">9.81</span> kN/m&sup3;</label>
-                <input type="range" id="gamma-slider" min="9.30" max="9.85" step="0.01" value="9.81">
+                <label for="dr-slider">Densidad Relativa (DR): <span id="dr-val">1.00</span></label>
+                <input type="range" id="dr-slider" min="0.50" max="3.00" step="0.01" value="1.00">
             </div>
 
             <div class="results-panel">
                 <h2>Resultados en Tiempo Real</h2>
+                <div class="result-item">Peso esp. fluido (&gamma;): <strong id="gamma-out">9.81</strong> kN/m&sup3;</div>
                 <div class="result-item">Fuerza Hidrostática (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
                 <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
                 <div class="result-item">Fuerza Aplicada (FA): <strong id="fa-out">0.00</strong> kN</div>
@@ -62,8 +63,6 @@
 
         <section class="canvas-container" id="canvas-container"></section>
     </main>
-
-    <!-- OJO: Aquí llamamos al NUEVO archivo JS -->
     <script src="js/app_totalmente.js"></script>
 </body>
 </html>

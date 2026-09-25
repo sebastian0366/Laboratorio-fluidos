@@ -1,7 +1,7 @@
 // Variables del DOM
 let hSlider, bSlider, thetaSlider, wSlider, drSlider;
 let hVal, bVal, thetaVal, wVal, drVal;
-let frOut, cpOut, tOut;
+let frOut, cpOut, tOut, gammaOut;
 
 // Constantes Físicas
 const L = 3.5;       
@@ -27,6 +27,7 @@ function setup() {
     frOut = select('#fr-out');
     cpOut = select('#cp-out');
     tOut = select('#t-out');
+    gammaOut = select('#gamma-out');
 }
 
 // Función auxiliar para dibujar etiquetas con fondo
@@ -64,6 +65,7 @@ function draw() {
     thetaVal.html(theta_deg);
     wVal.html(W.toFixed(1));
     drVal.innerText = DR.toFixed(2);
+    gammaOut.html(gamma.toFixed(2));
 
     // 2. Cálculos Físicos
     let theta_rad = radians(theta_deg);

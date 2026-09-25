@@ -4,7 +4,7 @@ let hVal, bVal, thetaVal, wVal, gammaVal;
 let frOut, cpOut, tOut;
 
 // Constantes Físicas
-const L = 2.0;       
+const L = 2.5;       
 
 function setup() {
     let canvasContainer = select('#canvas-container');

@@ -29,7 +29,7 @@
             </div>
 
             <div class="control-group" style="margin-top: 15px;">
-                <label for="d-slider">Profundidad del agua (h), D: <span id="d-val">2.00</span> m</label>
+                <label for="d-slider">Profundidad del agua (h): <span id="d-val">2.00</span> m</label>
                 <input type="range" id="d-slider" min="0.00" max="2.50" step="0.01" value="2.00">
             </div>
 
@@ -50,15 +50,15 @@
 
             <div class="control-group">
                 <label for="dr-slider">Densidad Relativa (DR): <span id="dr-val">1.00</span></label>
-                <input type="range" id="dr-slider" min="0.50" max="5.00" step="0.01" value="1.00">
+                <input type="range" id="dr-slider" min="0.50" max="3.00" step="0.01" value="1.00">
             </div>
 
             <div class="results-panel">
                 <h2>Resultados en Tiempo Real</h2>
                 <div class="result-item">Peso esp. fluido (&gamma;): <strong id="gamma-out">9.81</strong> kN/m&sup3;</div>
                 <div class="result-item">Fuerza Hidrostática (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
-                <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
-                <div class="result-item">Fuerza Aplicada (FA): <strong id="fa-out">0.00</strong> kN</div>
+                <div class="result-item">Centro de Presión (y<sub>cp</sub>): <strong id="cp-out">0.00</strong> m</div>
+                <div class="result-item">Tensión del cable (T): <strong id="t-out">0.00</strong> kN</div>
             </div>
         </section>
 

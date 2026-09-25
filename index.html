@@ -2,274 +2,70 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Compuertas</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f7; }
-        header { background-color: #34495e; color: white; padding: 15px; text-align: center; }
-        h1 { margin: 0; font-size: 24px; }
-        
-        /* Sistema de Pestañas */
-        .tabs { display: flex; justify-content: center; background-color: #2c3e50; padding: 10px; gap: 10px; }
-        .tab-btn { background-color: transparent; color: white; border: 2px solid #f1c40f; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .tab-btn:hover, .tab-btn.active { background-color: #f1c40f; color: #2c3e50; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* Diseño del Caso 1 */
-        .container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 15px; }
-        .controls-panel { flex: 1; min-width: 300px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .canvas-container { flex: 2; min-width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-height: 500px; position: relative; }
-        .control-group { margin-bottom: 15px; }
-        .control-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
-        .control-group input[type="range"] { width: 100%; cursor: pointer; }
-        .results-panel { background-color: #e8f4f8; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #3498db; }
-        .result-item { margin-bottom: 10px; font-size: 16px; color: #34495e; }
-        .result-item strong { color: #e74c3c; font-size: 18px; }
-    </style>
-    <!-- Cargamos p5.js -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fuerzas en una Compuerta Parcialmente Sumergida</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 </head>
 <body>
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <div style="background-color: #34495e; padding: 12px; text-align: center;">
+        <a href="index.html" style="color: #f1c40f; margin-right: 20px; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid #f1c40f;">🕹️ Caso 1: Parcialmente Sumergida</a>
+        <a href="totalmente.html" style="color: white; text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid white;">🕹️ Caso 2: Totalmente Sumergida</a>
+    </div>
 
     <header>
-        <h1>Mecánica de Fluidos: Fuerzas sobre Compuertas</h1>
+        <img src="logo.png" alt="Logo UTP" class="logo-utp">
+        <h1>Fuerzas en una Compuerta Parcialmente Sumergida</h1>
+        <p class="subtitle">Facultad de Mecánica Aplicada - UTP</p>
+        <p class="attribution">Basado en el modelo físico original de <a href="https://learncheme.com/" target="_blank">LearnChemE</a>.</p>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('caso1-tab', this)">Caso 1: Bisagra Inferior (LearnChemE)</button>
-        <button class="tab-btn" onclick="switchTab('caso2-tab', this)">Caso 2: Tu Diseño Anterior</button>
-    </div>
-
-    <!-- ========================================== -->
-    <!--                CASO 1 TAB                  -->
-    <!-- ========================================== -->
-    <div id="caso1-tab" class="tab-content active">
-        <div class="container">
-            <section class="controls-panel">
-                <h2 style="margin-top:0; color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:10px;">Parámetros (Caso 1)</h2>
-                
-                <div class="control-group" style="background-color: #fdf2e9; padding: 10px; border-radius: 4px; border-left: 4px solid #e67e22;">
-                    <label style="margin-bottom: 0;">Longitud de la compuerta, L: <strong>4.00</strong> m</label>
-                </div>
-
-                <div class="control-group" style="margin-top: 15px;">
-                    <label>Nivel del agua (d): <span id="d-val">2.00</span> m</label>
-                    <input type="range" id="d-slider" min="0.00" max="4.00" step="0.01" value="2.00">
-                </div>
-
-                <div class="control-group">
-                    <label>Ancho (b): <span id="b-val">1.50</span> m</label>
-                    <input type="range" id="b-slider" min="0.50" max="3.00" step="0.01" value="1.50">
-                </div>
-
-                <div class="control-group">
-                    <label>Ángulo (&theta;): <span id="theta-val">60</span>&deg;</label>
-                    <input type="range" id="theta-slider" min="20" max="80" step="1" value="60">
-                </div>
-
-                <div class="control-group">
-                    <label>Peso (W): <span id="w-val">15.0</span> kN</label>
-                    <input type="range" id="w-slider" min="0.0" max="40.0" step="0.1" value="15.0">
-                </div>
-
-                <div class="control-group">
-                    <label>Densidad Rel. (DR): <span id="dr-val">1.00</span></label>
-                    <input type="range" id="dr-slider" min="0.50" max="3.00" step="0.01" value="1.00">
-                </div>
-
-                <div class="results-panel">
-                    <h2 style="margin-top:0; font-size:18px;">Resultados</h2>
-                    <div class="result-item">Fuerza del Agua (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
-                    <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
-                    <div class="result-item">Tensión del cable (T): <strong id="t-out">0.00</strong> kN</div>
-                </div>
-            </section>
-
-            <section class="canvas-container" id="canvas-container"></section>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!--                CASO 2 TAB                  -->
-    <!-- ========================================== -->
-    <div id="caso2-tab" class="tab-content">
-        <div class="container" style="background: white; padding: 20px; border-radius: 8px;">
-            <h2>Tu Caso 2 (Pega tu código aquí)</h2>
-            <p>Reemplaza el interior de este <code>&lt;div id="caso2-tab"&gt;</code> con el HTML/JS que tenías configurado para el segundo caso.</p>
-            <!-- AQUI VA EL HTML DEL CASO 2 QUE TENIAMOS -->
-        </div>
-    </div>
-
-    <script>
-        // --- LÓGICA DE PESTAÑAS ---
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    <main class="container">
+        <section class="controls-panel">
+            <h2>Parámetros del Sistema</h2>
             
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
+            <div class="control-group" style="background-color: #e8f4f8; padding: 10px; border-left: 4px solid #3498db; border-radius: 4px;">
+                <label style="margin-bottom: 0; color: #2c3e50;">Longitud de la compuerta, L: <strong>2.50</strong> m <em>(Constante)</em></label>
+            </div>
 
-            // Forzar actualización del canvas al mostrar la pestaña
-            if(tabId === 'caso1-tab' && typeof windowResized === 'function') {
-                setTimeout(windowResized, 50); 
-            }
-        }
+            <div class="control-group" style="margin-top: 15px;">
+                <label for="d-slider">Profundidad del agua, D: <span id="d-val">2.00</span> m</label>
+                <input type="range" id="d-slider" min="0.00" max="3.00" step="0.01" value="2.00">
+            </div>
 
-        // --- LÓGICA DE P5.JS (CASO 1 UNIFICADO) ---
-        let dSlider, bSlider, thetaSlider, wSlider, drSlider;
-        const L = 4.0; // Longitud constante
-        let canvasInstance;
+            <div class="control-group">
+                <label for="b-slider">Ancho de la compuerta, b: <span id="b-val">1.00</span> m</label>
+                <input type="range" id="b-slider" min="0.50" max="3.00" step="0.01" value="1.00">
+            </div>
 
-        function setup() {
-            let container = document.getElementById('canvas-container');
-            let w = container.clientWidth > 0 ? container.clientWidth : 600;
-            let canvas = createCanvas(w, 500);
-            canvas.parent('canvas-container');
+            <div class="control-group">
+                <label for="theta-slider">Ángulo de la compuerta, &theta;: <span id="theta-val">45</span>&deg;</label>
+                <input type="range" id="theta-slider" min="0" max="90" step="1" value="45">
+            </div>
 
-            dSlider = document.getElementById('d-slider');
-            bSlider = document.getElementById('b-slider');
-            thetaSlider = document.getElementById('theta-slider');
-            wSlider = document.getElementById('w-slider');
-            drSlider = document.getElementById('dr-slider');
-        }
+            <div class="control-group">
+                <label for="w-slider">Peso de la compuerta, W: <span id="w-val">5.0</span> kN</label>
+                <input type="range" id="w-slider" min="0.0" max="25.0" step="0.1" value="5.0">
+            </div>
 
-        function drawLabel(txt, x, y, col) {
-            push();
-            fill(255, 255, 255, 225); noStroke(); rectMode(CENTER);
-            rect(x, y, textWidth(txt) + 12, 24, 4); 
-            fill(col); textAlign(CENTER, CENTER); textSize(14); textStyle(BOLD); text(txt, x, y); 
-            pop();
-        }
+            <div class="control-group">
+                <label for="dr-slider">Densidad Relativa (DR): <span id="dr-val">1.00</span></label>
+                <input type="range" id="dr-slider" min="0.50" max="3.00" step="0.01" value="1.00">
+            </div>
 
-        function draw() {
-            // Solo procesar si el contenedor está visible
-            if(document.getElementById('caso1-tab').classList.contains('active') === false) return;
+            <div class="results-panel">
+                <h2>Resultados en Tiempo Real</h2>
+                <div class="result-item">Peso esp. fluido (&gamma;): <strong id="gamma-out">9.81</strong> kN/m&sup3;</div>
+                <div class="result-item">Fuerza Hidrostática (F<sub>R</sub>): <strong id="fr-out">0.00</strong> kN</div>
+                <div class="result-item">Centro de Presión (desde bisagra): <strong id="cp-out">0.00</strong> m</div>
+                <div class="result-item">Fuerza Aplicada (FA): <strong id="fa-out">0.00</strong> kN</div>
+            </div>
+        </section>
 
-            background(248, 249, 250);
+        <section class="canvas-container" id="canvas-container"></section>
+    </main>
 
-            let D_input = parseFloat(dSlider.value); 
-            let b = parseFloat(bSlider.value);
-            let theta_deg = parseFloat(thetaSlider.value);
-            let W = parseFloat(wSlider.value); 
-            let DR = parseFloat(drSlider.value); 
-
-            let theta_rad = radians(theta_deg);
-
-            // Tope de altura del agua basado en el ángulo
-            let max_D = L * sin(theta_rad);
-            let D = min(D_input, max_D); 
-
-            document.getElementById('d-val').innerText = D_input > max_D ? D.toFixed(2) + " (Máx)" : D.toFixed(2);
-            document.getElementById('d-val').style.color = D_input > max_D ? "red" : "#2c3e50";
-            
-            document.getElementById('b-val').innerText = b.toFixed(2); 
-            document.getElementById('theta-val').innerText = theta_deg;
-            document.getElementById('w-val').innerText = W.toFixed(1); 
-            document.getElementById('dr-val').innerText = DR.toFixed(2);
-
-            // --- FÍSICA LEARNMCHEME ---
-            let gamma = DR * 9.81; 
-            let L_m = D / sin(theta_rad); 
-            let h_c = D / 2; 
-            let F_R = gamma * h_c * (L_m * b); 
-            
-            // Centro de presión medido desde la bisagra inferior
-            let s_cp = L_m / 3; 
-            
-            // Momentos (Tensión = momento agua + momento peso / brazo)
-            let M_water = F_R * s_cp; 
-            let M_weight = W * (L / 2) * cos(theta_rad); 
-            let T = (M_water + M_weight) / (L * sin(theta_rad));
-
-            document.getElementById('fr-out').innerText = F_R.toFixed(2);
-            document.getElementById('cp-out').innerText = s_cp.toFixed(2);
-            document.getElementById('t-out').innerText = T.toFixed(2);
-
-            // --- RENDERIZADO VISUAL ---
-            let scaleFactor = min(width, height) / 5.5;
-            let floorY = height * 0.85; 
-            let originX = width * 0.45; // Bisagra
-            let originY = floorY; 
-            
-            let endX = originX + L * cos(theta_rad) * scaleFactor; 
-            let endY = originY - L * sin(theta_rad) * scaleFactor;
-            let leftWallX = width * 0.15; 
-            let waterY = originY - D * scaleFactor;
-            let interX = originX + L_m * cos(theta_rad) * scaleFactor;
-
-            push();
-            // Entorno (Pared y Suelo)
-            stroke(80); strokeWeight(4);
-            line(leftWallX, originY - L * scaleFactor - 40, leftWallX, floorY); 
-            line(leftWallX, floorY, width * 0.9, floorY); 
-
-            // Agua
-            if (D > 0) {
-                fill(52, 152, 219, 140); noStroke();
-                beginShape();
-                vertex(leftWallX, waterY);
-                vertex(interX, waterY);
-                vertex(originX, originY);
-                vertex(leftWallX, originY);
-                endShape(CLOSE);
-                
-                stroke(41, 128, 185); strokeWeight(2);
-                line(leftWallX, waterY, interX, waterY);
-            }
-
-            // Compuerta y Bisagra
-            stroke(44, 62, 80); strokeWeight(10);
-            line(originX, originY, endX, endY);
-            fill(231, 76, 60); noStroke();
-            circle(originX, originY, 16); 
-
-            // Tensión (Cable Superior)
-            if (T > 0.1) {
-                stroke(120); strokeWeight(3);
-                line(leftWallX, endY, endX, endY); 
-                fill(80); noStroke(); rectMode(CENTER);
-                rect(leftWallX, endY, 10, 30); 
-                
-                let fx = endX - 80;
-                stroke(243, 156, 18); strokeWeight(4); line(endX, endY, fx, endY);
-                push(); translate(fx, endY); rotate(PI); fill(243, 156, 18); noStroke(); triangle(0, 0, -14, -6, -14, 6); pop();
-                drawLabel("T", fx - 25, endY - 20, color(243, 156, 18));
-            }
-
-            // Fuerza del Agua
-            if (F_R > 0) {
-                let cpX = originX + s_cp * cos(theta_rad) * scaleFactor;
-                let cpY = originY - s_cp * sin(theta_rad) * scaleFactor;
-                let screenAngle = -theta_rad + PI/2; 
-                let fx = cpX + 80 * cos(screenAngle);
-                let fy = cpY + 80 * sin(screenAngle);
-                
-                stroke(231, 76, 60); strokeWeight(4); line(cpX, cpY, fx, fy);
-                push(); translate(fx, fy); rotate(screenAngle); fill(231, 76, 60); noStroke(); triangle(0, 0, -14, -6, -14, 6); pop();
-                drawLabel("FR", fx + 25, fy + 15, color(231, 76, 60)); 
-            }
-
-            // Peso W
-            if (W > 0) {
-                let cmX = originX + (L/2) * cos(theta_rad) * scaleFactor;
-                let cmY = originY - (L/2) * sin(theta_rad) * scaleFactor;
-                let fx = cmX;
-                let fy = cmY + 80;
-                
-                stroke(39, 174, 96); strokeWeight(4); line(cmX, cmY, fx, fy);
-                push(); translate(fx, fy); rotate(PI/2); fill(39, 174, 96); noStroke(); triangle(0, 0, -14, -6, -14, 6); pop();
-                drawLabel("W", fx + 25, fy + 15, color(39, 174, 96)); 
-            }
-            pop();
-        }
-
-        function windowResized() {
-            let container = document.getElementById('canvas-container');
-            if(container && container.clientWidth > 0) {
-                resizeCanvas(container.clientWidth, container.clientHeight || 500);
-            }
-        }
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>

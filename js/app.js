@@ -28,19 +28,19 @@ function setup() {
     tOut = select('#t-out');
 }
 
-// Función auxiliar para dibujar etiquetas con fondo
+// Función auxiliar para dibujar etiquetas con fondo para que resalten
 function drawLabel(txt, x, y, col) {
     push();
-    fill(255, 255, 255, 220); 
+    fill(255, 255, 255, 220); // Fondo semi-transparente blanco
     noStroke();
     rectMode(CENTER);
-    rect(x, y, textWidth(txt) + 12, 24, 4); 
+    rect(x, y, textWidth(txt) + 12, 24, 4); // Creador del rectángulo de fondo
     
     fill(col);
     textAlign(CENTER, CENTER);
     textSize(16);
     textStyle(BOLD);
-    text(txt, x, y); 
+    text(txt, x, y); // Dibuja el texto encima
     pop();
 }
 
@@ -52,7 +52,7 @@ function draw() {
     let b = parseFloat(bSlider.value());
     let theta_deg = parseFloat(thetaSlider.value());
     let W = parseFloat(wSlider.value()); 
-    let gamma = parseFloat(gammaSlider.value()); 
+    let gamma = parseFloat(gammaSlider.value()); // Lee el peso específico
 
     hVal.html(h.toFixed(2));
     bVal.html(b.toFixed(2));
@@ -69,6 +69,7 @@ function draw() {
     let M_water = 0; 
 
     if (h > 0) {
+        // Aquí gamma multiplica la ecuación, afectando los resultados.
         F_R = gamma * b * (h * s_max - 0.5 * s_max * s_max * sin(theta_rad));
         M_water = gamma * b * (h * 0.5 * s_max * s_max - (1/3) * pow(s_max, 3) * sin(theta_rad));
         
@@ -92,25 +93,20 @@ function draw() {
 
     push();
     
-    // --- ACHURADO (Fondo y Pared Izquierda) ---
-    // Líneas principales del tanque (Muros)
-    stroke(80); // Color oscuro para los muros
-    strokeWeight(4);
-    line(tankLeftX - 30, originY, width * 0.95, originY); // Suelo (se extiende a la izquierda)
-    line(tankLeftX, originY, tankLeftX, originY - 380); // Pared izquierda
+    // Paredes y achurado
+    stroke(100);
+    strokeWeight(3);
+    line(tankLeftX, originY, width * 0.95, originY); 
+    line(tankLeftX, originY, tankLeftX, originY - 350); 
 
-    // Líneas diagonales (Achurado que indica que es sólido)
-    stroke(120); // Gris intermedio para las diagonales
-    strokeWeight(2);
-    // Diagonales del suelo (Hacia abajo y la izquierda)
-    for (let x = tankLeftX - 10; x < width * 0.95; x += 20) {
-        line(x, originY, x - 20, originY + 20);
+    stroke(170);
+    strokeWeight(1.5);
+    for (let x = tankLeftX + 10; x < width * 0.95; x += 15) {
+        line(x, originY, x - 10, originY + 15);
     }
-    // Diagonales de la pared izquierda (Hacia abajo y la izquierda)
-    for (let y = originY - 20; y > originY - 380; y -= 20) {
-        line(tankLeftX, y, tankLeftX - 20, y + 20);
+    for (let y = originY - 10; y > originY - 350; y -= 15) {
+        line(tankLeftX, y, tankLeftX - 15, y + 15);
     }
-    // ------------------------------------------
 
     // Agua
     if (h > 0) {
@@ -159,11 +155,12 @@ function draw() {
     circle(originX, originY, 14);
 
     // --- VECTORES Y SUS ETIQUETAS ---
+
     // 1. Tensión (T)
     stroke(127, 140, 141);
     strokeWeight(3);
     line(endX, endY, endX - 100, endY);
-    drawLabel("T", endX - 50, endY - 20, color(50, 50, 50)); 
+    drawLabel("T", endX - 50, endY - 20, color(50, 50, 50)); // Etiqueta T
 
     // 2. Fuerza Resultante (FR)
     if (F_R > 0) {
@@ -189,7 +186,7 @@ function draw() {
         triangle(0, 0, -12, -6, -12, 6);
         pop();
 
-        drawLabel("FR", fx - 25, fy - 20, color(231, 76, 60)); 
+        drawLabel("FR", fx - 25, fy - 20, color(231, 76, 60)); // Etiqueta FR
     }
 
     // 3. Vector de Peso (W)
@@ -207,7 +204,7 @@ function draw() {
     triangle(0, 0, -10, -5, -10, 5);
     pop();
 
-    drawLabel("W", cmX + 25, cmY + 25, color(39, 174, 96)); 
+    drawLabel("W", cmX + 25, cmY + 25, color(39, 174, 96)); // Etiqueta W
 
     pop();
 }
